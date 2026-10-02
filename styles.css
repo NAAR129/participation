@@ -1,5 +1,12 @@
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#344b34;background:#eff6eb;font-synthesis:none;color-scheme:light}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+.confirmation{text-align:center;padding:12px 0 24px}
+.success-icon{display:grid;place-items:center;width:76px;height:76px;margin:6px auto 22px;border-radius:50%;background:#edf7e9;color:#398338;font-size:2.8rem;font-weight:600}
+.confirmation h2{color:#256b2b;font-size:clamp(1.7rem,6vw,2.2rem);font-weight:600;line-height:1.25;margin:0 0 18px}
+.confirmation p{font-size:1.08rem;line-height:1.55;color:#50604d;margin:0 0 16px}
+.confirmation .next-steps{font-size:1rem}
+#status[data-state=uncertain]{color:#785219;background:#fff6e6;border-radius:12px;padding:14px}
 body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:36px 18px;background:radial-gradient(ellipse at 50% 0%,#f8fff1 0%,#edf4e7 50%,#dfe9e5 100%)}
 .card{width:min(100%,590px);padding:38px 36px 32px;background:#fff;border-radius:32px;box-shadow:0 28px 65px #26472a30}
 .logos{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px}
