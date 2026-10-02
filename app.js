@@ -124,9 +124,11 @@ form.addEventListener('submit', async event => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30000);
   try {
+    const payload = new URLSearchParams(new FormData(form));
+    payload.set('response', 'ajax');
     const response = await fetch(form.action, {
       method: 'POST',
-      body: new URLSearchParams(new FormData(form)),
+      body: payload,
       credentials: 'omit',
       redirect: 'follow',
       signal: controller.signal

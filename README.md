@@ -1,25 +1,21 @@
 # Participación · TeToM
 
-Formulario estático adaptable a celulares, con español, inglés, alemán e italiano. Usa el idioma compatible del navegador y recuerda una selección manual. Para otros idiomas utiliza inglés. Los logos originales proceden del repositorio `naar129/dienes2`.
+Formulario para móviles y escritorio, con español, inglés, alemán e italiano. Detecta el idioma compatible del navegador, utiliza inglés como alternativa y recuerda los cambios manuales. Logos originales de `naar129/dienes2`.
 
-## Publicación
+Página: https://naar129.github.io/participation/
 
-En GitHub: **Settings → Pages → Build and deployment → Deploy from a branch → main → / (root) → Save**.
+## Registro y confirmación
 
-Dirección prevista una vez habilitado Pages: https://naar129.github.io/participation/
+El formulario envía `nombre`, `email`, `pais` e `idioma` al despliegue de Apps Script facilitado por el propietario. La versión actual usa `fetch`, añade `response=ajax` y permanece en la misma página. Sólo muestra el agradecimiento cuando recibe una respuesta HTTP correcta cuyo texto es exactamente `OK`. No utiliza `no-cors`, temporizadores de éxito ni reintentos automáticos. Si no puede confirmar la respuesta, avisa de que el registro podría haberse guardado.
 
-## Registro existente
+Los archivos JavaScript y CSS incluyen una versión en la URL para evitar que el navegador use la versión anterior del formulario.
 
-El formulario envía un POST normal al enlace de Google Apps Script proporcionado. Campos: `nombre`, `email`, `pais` e `idioma` (oculto). La fecha debe generarse en el servidor. Las columnas de la hoja son, en este orden: **Fecha | Nombre | Email | País**.
+## Código de Google Apps Script
 
-La página envía los datos con `fetch` y muestra la confirmación dentro de la misma tarjeta, conservando logos e idioma. Sólo confirma cuando la respuesta HTTP es correcta y el servidor devuelve exactamente `OK`. No usa `no-cors`, respuestas opacas ni confirmación basada en temporizadores. Si no puede leer la respuesta, muestra un estado de recepción no confirmada y no reenvía automáticamente, ya que el registro podría haberse guardado.
+`google-apps-script/Code.gs` contiene el código completo listo para el proyecto RegistroWeb, con la pestaña `registro` indicada por el propietario. Antes de pegarlo, sustituir `PEGA_AQUI_EL_ID_DE_TU_HOJA` por el ID que ya contiene el código actual; el identificador de la hoja se conserva únicamente en Apps Script. Guarda **Fecha | Nombre | Email | País**. Para peticiones AJAX devuelve `OK` después del guardado; para un POST normal devuelve una tarjeta con logos, agradecimiento en el idioma del formulario y botón para regresar a la página. Google puede mantener su URL mientras muestra esta tarjeta; el botón utiliza `target="_top"` para volver a GitHub Pages.
 
-El frontend por sí solo no modifica el Apps Script existente. Si su función `doPost(e)` sólo guarda nombre y email, debe añadirse `e.parameter.pais` como cuarta columna. Antes de reemplazarla, hay que revisar su código y la hoja de destino.
-
-Se incluye una alternativa completa en `google-apps-script/Code.gs`. No está instalada ni cambia el endpoint existente. Para usarla, configura las propiedades `SPREADSHEET_ID` y `SHEET_NAME` en Apps Script, utiliza una hoja nativa de Google Sheets con los encabezados indicados y publica una nueva versión del despliegue. Si creas otro despliegue, actualiza también el atributo `action` del formulario. Un archivo `.xlsx` en Drive debe convertirse a Google Sheets para esta alternativa.
+Copiar el código en Apps Script y actualizar **Implementar → Gestionar implementaciones → lápiz → Nueva versión → Implementar**, conservando **Ejecutar como: Yo** y **Acceso: Cualquier persona**. El archivo del repositorio no actualiza automáticamente el despliegue de Google.
 
 ## Verificación
 
-Se comprobaron sintaxis JavaScript y, con un DOM simulado, detección de los cuatro idiomas, idioma alternativo, funcionamiento sin almacenamiento local, conservación de los campos al cambiar de idioma, validación y estado de envío. No se enviaron datos a la hoja real. La comprobación visual en navegador no pudo completarse en el entorno de ejecución. La comprobación final del guardado requiere revisar el Apps Script y realizar una inscripción de prueba.
-
-El script activo compartido por el propietario guarda Fecha, Nombre, Email y País y devuelve `ContentService.createTextOutput('OK')`. Es compatible con la confirmación en la página si Google permite leer la respuesta desde el navegador. La alternativa `Code.gs` anterior devuelve HTML y necesita cambiar su retorno a texto `OK` para usar este flujo.
+Se comprobaron la sintaxis, los estados del frontend mediante DOM simulado y 16 casos del servidor: cuatro idiomas, respuesta AJAX/HTML y guardado correcto/error. Las pruebas no escriben en la hoja real. La inscripción completa debe comprobarse después de actualizar la implementación en Google.
