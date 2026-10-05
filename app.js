@@ -107,49 +107,21 @@ form.querySelectorAll('input:not([type=hidden])').forEach(input => {
   input.addEventListener('input', () => input.setCustomValidity(''));
 });
 
-form.addEventListener('submit', async event => {
-  event.preventDefault();
+form.addEventListener('submit', event => {
   if (submitting) { event.preventDefault(); return; }
   for (const input of form.querySelectorAll('input:not([type=hidden])')) {
     input.value = input.value.trim();
     input.setCustomValidity(input.value ? '' : translations[language].required);
   }
   if (!form.reportValidity()) { event.preventDefault(); return; }
+  // Submit normally so Apps Script displays its translated HTML confirmation.
+  // A saved registration does not depend on reading a cross-origin fetch response.
   submitting = true;
   outcome = 'sending';
   button.disabled = true;
   button.textContent = translations[language].sending;
   status.hidden = false;
   status.textContent = translations[language].status;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
-  try {
-    const payload = new URLSearchParams(new FormData(form));
-    payload.set('response', 'ajax');
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: payload,
-      credentials: 'omit',
-      redirect: 'follow',
-      signal: controller.signal
-    });
-    const result = (await response.text()).trim();
-    // Confirm only the actual OK returned by the existing Apps Script.
-    if (!response.ok || result !== 'OK') throw new Error('Unconfirmed registration');
-    outcome = 'success';
-    form.hidden = true;
-    document.querySelector('.intro').hidden = true;
-    confirmation.hidden = false;
-    confirmation.focus();
-  } catch (_) {
-    // A blocked response or timeout can occur AFTER a write: never retry automatically.
-    outcome = 'uncertain';
-    status.dataset.state = 'uncertain';
-    status.textContent = translations[language].uncertain;
-    button.textContent = translations[language].submit;
-  } finally {
-    clearTimeout(timeout);
-  }
 });
 
 window.addEventListener('pageshow', () => {
