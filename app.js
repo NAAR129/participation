@@ -125,7 +125,7 @@ form.addEventListener('submit', event => {
 });
 
 window.addEventListener('pageshow', () => {
-  if (outcome !== 'idle') return;
+  outcome = 'idle';
   submitting = false;
   button.disabled = false;
   status.hidden = true;
